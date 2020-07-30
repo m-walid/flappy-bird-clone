@@ -152,6 +152,9 @@ function setHighScore() {
     localStorage.setItem("highscore", score);
     document.querySelector("#high-score").firstElementChild.textContent = score;
   }
+  else {
+    document.querySelector("#high-score").firstElementChild.textContent = highScore;
+  } 
 }
 
 function gameOver(updateInterval) {
