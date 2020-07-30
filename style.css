@@ -1,0 +1,150 @@
+:root {
+  --bg-color: rgba(53, 173, 255);
+  --block-color: rgb(55, 219, 55);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: default;
+  user-select: none;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+img {
+  user-select: none;
+}
+
+#container {
+  margin: 0 auto;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* to hide blocks  */
+  position: relative; /* to hide overflow of child with position absolute*/
+  overflow: hidden;
+}
+
+#score {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 20px;
+  letter-spacing: 2px;
+  box-shadow: 1px 1px 10px rgb(0, 110, 255);
+  padding: 10px;
+  color: rgb(203, 238, 255);
+  z-index: 5;
+}
+
+#play {
+  color: rgb(173, 209, 233);
+  font-size: 60px;
+  position: absolute;
+  z-index: 15;
+
+  box-shadow: 0 0 10px rgb(20, 100, 165);
+  background-color: #005288;
+  padding: 15px 15px 15px 25px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+#restart {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.329);
+  z-index: 15;
+}
+
+#restart-content {
+  color: rgb(218, 222, 228);
+  margin: 50% auto;
+  width: 80%;
+  height: 150px;
+  background-color: #113951;
+  box-shadow: 5px 5px 5px rgb(11, 32, 71);
+  display: flex;
+  padding-top: 7px;
+  align-items: center;
+  flex-direction: column;
+  font-size: 25px;
+}
+
+#rst-bt {
+  margin-top: 20px;
+  padding: 6px 15px;
+  border: 2px solid #043858;
+  box-shadow: 0 0 10px #02243a;
+  border-radius: 10px;
+  background-color: #477087;
+}
+
+#bird {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  top: -20px;
+  margin-left: -30%;
+  z-index: 10;
+}
+
+.block {
+  height: 100%;
+  width: 70px;
+  position: absolute;
+  background-color: var(--block-color);
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 5px rgb(46, 45, 45);
+  z-index: 1;
+}
+
+.hole {
+  position: relative;
+  width: 100px;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 0 7px var(--bg-color); /* to hide box shadow of the block*/
+  height: 150px;
+  top: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+}
+
+.hole > div {
+  box-shadow: 0 0 3px rgb(46, 45, 45);
+  width: 80px;
+  height: 35px;
+  border-radius: 5px;
+  border: 1px solid rgb(99, 99, 99);
+  background-color: var(--block-color);
+}
+
+.hole .top {
+  margin-top: -35px;
+}
+.hole .bottom {
+  margin-bottom: -35px;
+}
+
+@media only screen and (min-width: 800px) {
+  #restart-content {
+    margin-top: 20%;
+    width: 30%;
+    height: 200px;
+  }
+}
