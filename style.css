@@ -8,6 +8,11 @@
   padding: 0;
   box-sizing: border-box;
   cursor: default;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
 }
 
@@ -72,18 +77,22 @@ img {
   color: rgb(218, 222, 228);
   margin: 50% auto;
   width: 80%;
-  height: 150px;
+  height: 200px;
   background-color: #113951;
   box-shadow: 5px 5px 5px rgb(11, 32, 71);
   display: flex;
-  padding-top: 7px;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   font-size: 25px;
 }
 
+#high-score {
+  margin-top: 15px;
+}
+
 #rst-bt {
-  margin-top: 20px;
+  margin-top: 25px;
   padding: 6px 15px;
   border: 2px solid #043858;
   box-shadow: 0 0 10px #02243a;

@@ -1,6 +1,6 @@
 const container = document.querySelector("#container");
 const bird = document.querySelector("#bird");
-const score = document.querySelector("#score").firstElementChild;
+const scoreElm = document.querySelector("#score").firstElementChild;
 const startBt = document.querySelector("#play");
 const restartBt = document.querySelector("#rst-bt");
 const containerBounds = container.getBoundingClientRect();
@@ -11,11 +11,13 @@ const blockSpeed = 4.5;
 const blockWidthOffset = 5;
 let birdSpeed = 0;
 let count = 0;
+let score = 0;
 let gameOverFlag = false;
 
 eventsHandler();
 
 function start() {
+  bird.style.top = "-20px";
   startBt.style.display = "none";
   birdSpeed = 0;
   count = 0;
@@ -26,9 +28,10 @@ function start() {
 
 function restart() {
   document.querySelectorAll(".block").forEach((block) => block.remove());
-  bird.style.top = "-20px";
+
   document.querySelector("#restart").style.display = "none";
-  score.textContent = 0;
+  score = 0;
+  scoreElm.textContent = score;
   start();
 }
 
@@ -45,17 +48,13 @@ function update() {
   const updateInterval = setInterval(() => {
     updateBird();
     updateBlock();
-    updateScore();
-    checkCollision();
     generateBlock();
     gameOver(updateInterval);
   }, 17);
 }
 
 function updateBird() {
-  const birdTop = Number(
-    window.getComputedStyle(bird).getPropertyValue("top").replace("px", "")
-  );
+  const birdTop = Number(bird.style.top.replace("px", ""));
   if (bird.getBoundingClientRect().bottom <= containerBounds.bottom) {
     birdSpeed += gravity;
     birdSpeed *= limitFactor;
@@ -83,8 +82,12 @@ function generateBlock() {
     block.setAttribute("passed", "false");
     const hole = document.createElement("div");
     hole.classList.add("hole");
-    hole.innerHTML = `<div class="top"></div>
-    <div class="bottom"></div>`;
+    const blockEnd1 = document.createElement("div");
+    const blockEnd2 = document.createElement("div");
+    blockEnd1.classList.add("top");
+    blockEnd2.classList.add("bottom");
+    hole.appendChild(blockEnd1);
+    hole.appendChild(blockEnd2);
     hole.style.top = getRandomHolePos() + "%";
     block.appendChild(hole);
     container.appendChild(block);
@@ -100,31 +103,55 @@ function updateBlock() {
   const blocks = document.querySelectorAll(".block");
   //
   blocks.forEach((block) => {
-    const blockLeft = Number(block.style.left.replace("px", ""));
-
-    if (block.getBoundingClientRect().right < containerBounds.left) {
-      block.remove();
-    } else {
-      block.style.left = blockLeft - blockSpeed + "px";
-    }
+    blockMove(block);
+    checkCollision(block);
+    updateScore(block);
   });
 }
 
-function checkCollision() {
-  const blocks = document.querySelectorAll(".block");
-  blocks.forEach((block) => {
-    const blockBounds = block.getBoundingClientRect();
-    const birdBounds = bird.getBoundingClientRect();
-    const holeBounds = block.firstElementChild.getBoundingClientRect();
-    if (
-      birdBounds.right > blockBounds.left - blockWidthOffset + 3 &&
-      birdBounds.left < blockBounds.right + blockWidthOffset - 3 &&
-      (birdBounds.top < holeBounds.top - 3 ||
-        birdBounds.bottom > holeBounds.bottom + 3)
-    ) {
-      gameOverFlag = true;
-    }
-  });
+function blockMove(block) {
+  const blockLeft = Number(block.style.left.replace("px", ""));
+
+  if (block.getBoundingClientRect().right < containerBounds.left) {
+    block.remove();
+  } else {
+    block.style.left = blockLeft - blockSpeed + "px";
+  }
+}
+
+function checkCollision(block) {
+  const blockBounds = block.getBoundingClientRect();
+  const birdBounds = bird.getBoundingClientRect();
+  const holeBounds = block.firstElementChild.getBoundingClientRect();
+  if (
+    birdBounds.right > blockBounds.left - blockWidthOffset + 3 &&
+    birdBounds.left < blockBounds.right + blockWidthOffset - 3 &&
+    (birdBounds.top < holeBounds.top - 3 ||
+      birdBounds.bottom > holeBounds.bottom + 3)
+  ) {
+    gameOverFlag = true;
+  }
+}
+
+function updateScore(block) {
+  const blockBounds = block.getBoundingClientRect();
+  const birdBounds = bird.getBoundingClientRect();
+  if (
+    birdBounds.left > blockBounds.right + 1 &&
+    block.getAttribute("passed") === "false"
+  ) {
+    score++;
+    scoreElm.textContent = score;
+    block.setAttribute("passed", "true");
+  }
+}
+
+function setHighScore() {
+  const highScore = localStorage.getItem("highscore");
+  if (highScore === null || score > Number(highScore)) {
+    localStorage.setItem("highscore", score);
+    document.querySelector("#high-score").firstElementChild.textContent = score;
+  }
 }
 
 function gameOver(updateInterval) {
@@ -132,22 +159,7 @@ function gameOver(updateInterval) {
     gameOverFlag = false;
     clearInterval(updateInterval);
     document.querySelector("#restart").style.display = "block";
-    document.querySelector("#restart-content").children[1].textContent =
-      score.textContent;
+    document.querySelector("#rst-score").firstElementChild.textContent = score;
+    setHighScore();
   }
-}
-
-function updateScore() {
-  const blocks = document.querySelectorAll(".block");
-  blocks.forEach((block) => {
-    const blockBounds = block.getBoundingClientRect();
-    const birdBounds = bird.getBoundingClientRect();
-    if (
-      birdBounds.left > blockBounds.right + 1 &&
-      block.getAttribute("passed") === "false"
-    ) {
-      score.textContent = Number(score.textContent) + 1;
-      block.setAttribute("passed", "true");
-    }
-  });
 }
